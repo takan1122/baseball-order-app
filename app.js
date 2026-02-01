@@ -15,11 +15,13 @@ document.getElementById("load").addEventListener("click", async () => {
  * CSV文字列 → メンバー配列に変換
  */
 function parseCSV(csv) {
-  // BOM対策（Excel由来CSVで稀に出る）
+  // BOM除去
   csv = csv.replace(/^\uFEFF/, "");
 
-  // 改行コードを正しく処理
-  const lines = csv.split(/\r?\n/).filter(line => line.trim() !== "");
+  // ★ これが決定打：CRを完全除去
+  csv = csv.replace(/\r/g, "");
+
+  const lines = csv.split("\n").filter(line => line.trim() !== "");
   const headers = lines[0].split(",").map(h => h.trim());
 
   const members = [];
