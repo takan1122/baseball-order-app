@@ -1,3 +1,6 @@
+const APP_TITLE = "草野球オーダー決定アプリ（試作）";
+const APP_VERSION = "v0.1.0";
+
 const manualAssignments = {
   投手: "佐藤",
   捕手: null,
@@ -87,6 +90,7 @@ function autoAssign(emptyPositions, availableMembers) {
 }
 const emptyPositions = getEmptyPositions(manualAssignments);
 const availableMembers = getUnusedMembers(manualAssignments, members);
+console.log(`=== ${APP_TITLE} ${APP_VERSION} ===`);
 const result = autoAssign(emptyPositions, availableMembers);
 
 if (!result.ok) {
