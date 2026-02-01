@@ -16,12 +16,13 @@ document.getElementById("load").addEventListener("click", async () => {
  */
 function parseCSV(csv) {
   const lines = csv.trim().split("\n");
-  const headers = lines[0].split(",");
+  const headers = lines[0].split(",").map(h => h.trim());
 
   const members = [];
 
   for (let i = 1; i < lines.length; i++) {
-    const values = lines[i].split(",");
+    const values = lines[i].split(",").map(v => v.trim());
+
     const member = {
       name: values[0],
       positions: {}
