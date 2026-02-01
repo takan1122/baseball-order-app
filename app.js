@@ -88,20 +88,25 @@ function autoAssign(emptyPositions, availableMembers) {
 
   return { ok: true, assignments, remainingMembers };
 }
-const emptyPositions = getEmptyPositions(manualAssignments);
-const availableMembers = getUnusedMembers(manualAssignments, members);
-console.log(`=== ${APP_TITLE} ${APP_VERSION} ===`);
-const result = autoAssign(emptyPositions, availableMembers);
+document.getElementById("loadMembersBtn").addEventListener("click", () => {
+  const emptyPositions = getEmptyPositions(manualAssignments);
+  const availableMembers = getUnusedMembers(manualAssignments, members);
 
-if (!result.ok) {
-  console.error(result.reason);
-} else {
-  const finalAssignments = {
-    ...manualAssignments,
-    ...result.assignments
-  };
-  const dhMembers = result.remainingMembers.map(m => m.name);
+  console.log(`=== ${APP_TITLE} ${APP_VERSION} ===`);
 
-  console.log("最終守備:", finalAssignments);
-  console.log("DH候補:", dhMembers);
-}
+  const result = autoAssign(emptyPositions, availableMembers);
+
+  if (!result.ok) {
+    console.error(result.reason);
+  } else {
+    const finalAssignments = {
+      ...manualAssignments,
+      ...result.assignments
+    };
+
+    const dhMembers = result.remainingMembers.map(m => m.name);
+
+    console.log("最終守備:", finalAssignments);
+    console.log("DH候補:", dhMembers);
+  }
+});
