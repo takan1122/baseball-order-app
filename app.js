@@ -88,25 +88,34 @@ function autoAssign(emptyPositions, availableMembers) {
 
   return { ok: true, assignments, remainingMembers };
 }
-document.getElementById("loadMembersBtn").addEventListener("click", () => {
-  const emptyPositions = getEmptyPositions(manualAssignments);
-  const availableMembers = getUnusedMembers(manualAssignments, members);
+document.addEventListener("DOMContentLoaded", () => {
+  const button = document.getElementById("loadMembersBtn");
 
-  console.log(`=== ${APP_TITLE} ${APP_VERSION} ===`);
-
-  const result = autoAssign(emptyPositions, availableMembers);
-
-  if (!result.ok) {
-    console.error(result.reason);
-  } else {
-    const finalAssignments = {
-      ...manualAssignments,
-      ...result.assignments
-    };
-
-    const dhMembers = result.remainingMembers.map(m => m.name);
-
-    console.log("最終守備:", finalAssignments);
-    console.log("DH候補:", dhMembers);
+  if (!button) {
+    console.error("loadMembersBtn が見つかりません");
+    return;
   }
+
+  button.addEventListener("click", () => {
+    const emptyPositions = getEmptyPositions(manualAssignments);
+    const availableMembers = getUnusedMembers(manualAssignments, members);
+
+    console.log(`=== ${APP_TITLE} ${APP_VERSION} ===`);
+
+    const result = autoAssign(emptyPositions, availableMembers);
+
+    if (!result.ok) {
+      console.error(result.reason);
+    } else {
+      const finalAssignments = {
+        ...manualAssignments,
+        ...result.assignments
+      };
+
+      const dhMembers = result.remainingMembers.map(m => m.name);
+
+      console.log("最終守備:", finalAssignments);
+      console.log("DH候補:", dhMembers);
+    }
+  });
 });
