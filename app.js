@@ -44,12 +44,10 @@ const members = [
     }
   }
 ];
-
 function pickRandom(array) {
   const index = Math.floor(Math.random() * array.length);
   return array[index];
 }
-
 function getEmptyPositions(manualAssignments) {
   return Object.keys(manualAssignments)
     .filter(position => manualAssignments[position] == null);
@@ -72,10 +70,7 @@ function autoAssign(emptyPositions, availableMembers) {
     );
 
     if (candidates.length === 0) {
-      return {
-        ok: false,
-        reason: `${position} を守れる人がいません`
-      };
+      return { ok: false, reason: `${position} を守れる人がいません` };
     }
 
     const selected = candidates.length === 1
@@ -88,16 +83,10 @@ function autoAssign(emptyPositions, availableMembers) {
     );
   }
 
-  return {
-    ok: true,
-    assignments,
-    remainingMembers
-  };
+  return { ok: true, assignments, remainingMembers };
 }
-
 const emptyPositions = getEmptyPositions(manualAssignments);
 const availableMembers = getUnusedMembers(manualAssignments, members);
-
 const result = autoAssign(emptyPositions, availableMembers);
 
 if (!result.ok) {
@@ -107,7 +96,6 @@ if (!result.ok) {
     ...manualAssignments,
     ...result.assignments
   };
-
   const dhMembers = result.remainingMembers.map(m => m.name);
 
   console.log("最終守備:", finalAssignments);
