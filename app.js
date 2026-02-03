@@ -1,5 +1,5 @@
 const APP_TITLE = "草野球オーダー決定アプリ（試作）";
-const APP_VERSION = "v0.2.0";
+const APP_VERSION = "v0.2.1";
 
 const manualAssignments = {
   投手: "佐藤",
@@ -173,25 +173,20 @@ async function loadSheetCSV() {
   return await res.text();
 }
 
-button.addEventListener("click", async () => {
-  const csv = await loadSheetCSV();
-  members = csvToMembers(csv);
+document.addEventListener("DOMContentLoaded", () => {
+  const button = document.getElementById("loadMembersBtn");
 
-  console.log("読み込んだメンバー:", members);
-
-  const emptyPositions = getEmptyPositions(manualAssignments);
-  const availableMembers = getUnusedMembers(manualAssignments, members);
-
-  const result = autoAssign(emptyPositions, availableMembers);
-
-  if (!result.ok) {
-    console.error(result.reason);
-  } else {
-    const finalAssignments = {
-      ...manualAssignments,
-      ...result.assignments
-    };
-    console.log("最終守備:", finalAssignments);
-    console.log("DH候補:", result.remainingMembers.map(m => m.name));
+  if (!button) {
+    console.error("loadMembersBtn が見つかりません");
+    return;
   }
+
+  button.addEventListener("click", async () => {
+    const csv = await loadSheetCSV();
+    members = csvToMembers(csv);
+
+    console.log("読み込んだメンバー:", members);
+
+    runAssignment(); // ← ここはもう関数化してあるのでこれでOK
+  });
 });
