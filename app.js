@@ -17,97 +17,109 @@ const members = [
   {
     name: "佐藤",
     positions: {
-      投手: true,  捕手: false, 一塁: true,
-      二塁: false, 遊撃: false, 三塁: false,
-      左翼: false, 中堅: false, 右翼: false,
+      投手: "hope", 捕手: "ng",   一塁: "ok",
+      二塁: "ng",   遊撃: "ng",   三塁: "ng",
+      左翼: "ng",   中堅: "ng",   右翼: "ng",
+      DH:   "ng",
     }
   },
   {
     name: "山本",
     positions: {
-      投手: false, 捕手: true,  一塁: false,
-      二塁: false, 遊撃: false, 三塁: true,
-      左翼: false, 中堅: false, 右翼: false,
+      投手: "ng",   捕手: "hope", 一塁: "ng",
+      二塁: "ng",   遊撃: "ng",   三塁: "ok",
+      左翼: "ng",   中堅: "ng",   右翼: "ng",
+      DH:   "ok",
     }
   },
   {
     name: "鈴木",
     positions: {
-      投手: false, 捕手: false, 一塁: true,
-      二塁: false, 遊撃: false, 三塁: false,
-      左翼: false, 中堅: false, 右翼: true,
+      投手: "ng",   捕手: "ng",   一塁: "hope",
+      二塁: "ng",   遊撃: "ng",   三塁: "ng",
+      左翼: "ng",   中堅: "ng",   右翼: "ok",
+      DH:   "ok",
     }
   },
   {
     name: "中村",
     positions: {
-      投手: false, 捕手: false, 一塁: false,
-      二塁: true,  遊撃: true,  三塁: false,
-      左翼: false, 中堅: false, 右翼: false,
+      投手: "ng",   捕手: "ng",   一塁: "ng",
+      二塁: "hope", 遊撃: "ok",   三塁: "ng",
+      左翼: "ng",   中堅: "ng",   右翼: "ng",
+      DH:   "ng",
     }
   },
   {
     name: "高橋",
     positions: {
-      投手: false, 捕手: false, 一塁: false,
-      二塁: false, 遊撃: true,  三塁: true,
-      左翼: false, 中堅: false, 右翼: false,
+      投手: "ng",   捕手: "ng",   一塁: "ng",
+      二塁: "ng",   遊撃: "hope", 三塁: "ok",
+      左翼: "ng",   中堅: "ng",   右翼: "ng",
+      DH:   "ng",
     }
   },
   {
     name: "田中",
     positions: {
-      投手: false, 捕手: false, 一塁: false,
-      二塁: false, 遊撃: false, 三塁: false,
-      左翼: true,  中堅: true,  右翼: false,
+      投手: "ng",   捕手: "ng",   一塁: "ng",
+      二塁: "ng",   遊撃: "ng",   三塁: "ng",
+      左翼: "hope", 中堅: "ok",   右翼: "ng",
+      DH:   "ok",
     }
   },
   {
     name: "伊藤",
     positions: {
-      投手: false, 捕手: false, 一塁: false,
-      二塁: false, 遊撃: false, 三塁: false,
-      左翼: false, 中堅: true,  右翼: true,
+      投手: "ng",   捕手: "ng",   一塁: "ng",
+      二塁: "ng",   遊撃: "ng",   三塁: "ng",
+      左翼: "ng",   中堅: "hope", 右翼: "ok",
+      DH:   "ok",
     }
   },
   {
     name: "渡辺",
     positions: {
-      投手: false, 捕手: false, 一塁: true,
-      二塁: false, 遊撃: false, 三塁: true,
-      左翼: false, 中堅: false, 右翼: false,
+      投手: "ng",   捕手: "ng",   一塁: "ok",
+      二塁: "ng",   遊撃: "ng",   三塁: "hope",
+      左翼: "ng",   中堅: "ng",   右翼: "ng",
+      DH:   "ng",
     }
   },
   {
     name: "小林",
     positions: {
-      投手: false, 捕手: false, 一塁: false,
-      二塁: true,  遊撃: false, 三塁: false,
-      左翼: true,  中堅: false, 右翼: false,
+      投手: "ng",   捕手: "ng",   一塁: "ng",
+      二塁: "ok",   遊撃: "ng",   三塁: "ng",
+      左翼: "hope", 中堅: "ng",   右翼: "ng",
+      DH:   "ok",
     }
   },
   {
     name: "加藤",
     positions: {
-      投手: false, 捕手: false, 一塁: false,
-      二塁: false, 遊撃: false, 三塁: false,
-      左翼: false, 中堅: true,  右翼: true,
+      投手: "ng",   捕手: "ng",   一塁: "ng",
+      二塁: "ng",   遊撃: "ng",   三塁: "ng",
+      左翼: "ng",   中堅: "ok",   右翼: "hope",
+      DH:   "ok",
     }
   },
   {
     name: "吉田",
     positions: {
-      投手: false, 捕手: false, 一塁: false,
-      二塁: false, 遊撃: false, 三塁: false,
-      左翼: true,  中堅: false, 右翼: true,
+      投手: "ng",   捕手: "ng",   一塁: "ng",
+      二塁: "ng",   遊撃: "ng",   三塁: "ng",
+      左翼: "ok",   中堅: "ng",   右翼: "hope",
+      DH:   "hope",
     }
   },
   {
     name: "山田",
     positions: {
-      投手: false, 捕手: false, 一塁: true,
-      二塁: true,  遊撃: false, 三塁: false,
-      左翼: false, 中堅: false, 右翼: false,
+      投手: "ng",   捕手: "ng",   一塁: "ok",
+      二塁: "hope", 遊撃: "ng",   三塁: "ng",
+      左翼: "ng",   中堅: "ng",   右翼: "ng",
+      DH:   "ng",
     }
   }
 ];
@@ -164,20 +176,30 @@ function getUnusedMembers(manualAssignments, members) {
   );
   return members.filter(m => !usedNames.has(m.name));
 }
-
 function autoAssign(emptyPositions, availableMembers) {
   const assignments = {};
   let remainingMembers = [...availableMembers];
 
   for (const position of emptyPositions) {
-    const candidates = remainingMembers.filter(
-      m => m.positions[position] === true
+
+    // ① 希望者
+    let candidates = remainingMembers.filter(
+      m => m.positions[position] === "hope"
     );
 
+    // ② 希望がいなければ可能
+    if (candidates.length === 0) {
+      candidates = remainingMembers.filter(
+        m => m.positions[position] === "ok"
+      );
+    }
+
+    // ③ それでもいなければ失敗
     if (candidates.length === 0) {
       return { ok: false, reason: `${position} を守れる人がいません` };
     }
 
+    // ④ 抽選
     const selected = candidates.length === 1
       ? candidates[0]
       : pickRandom(candidates);
