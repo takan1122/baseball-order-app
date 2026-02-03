@@ -174,6 +174,10 @@ function runAssignment() {
   const dhMembers = result.remainingMembers.map(m => m.name);
 
   renderResult(finalAssignments, dhMembers);
+  state.result = {
+    assignments: finalAssignments,
+    dh: dhMembers
+  };
   return true;
 }
 
@@ -217,24 +221,8 @@ async function loadSheetCSV() {
   return await res.text();
 }
 
-document.querySelectorAll(".backBtn").forEach(btn => {
-  btn.addEventListener("click", goBack);
-});
-
 document.addEventListener("DOMContentLoaded", () => {
-  const button = document.getElementById("loadMembersBtn");
-
-  if (!button) {
-    console.error("loadMembersBtn が見つかりません");
-    return;
-  }
-
-  button.addEventListener("click", async () => {
-    const csv = await loadSheetCSV();
-    members = csvToMembers(csv);
-
-    console.log("読み込んだメンバー:", members);
-
-    runAssignment(); // ← ここはもう関数化してあるのでこれでOK
+  document.querySelectorAll(".backBtn").forEach(btn => {
+    btn.addEventListener("click", goBack);
   });
 });
