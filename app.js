@@ -1,19 +1,31 @@
 const APP_TITLE = "草野球オーダー決定アプリ（試作）";
-const APP_VERSION = "v0.2.1";
+const APP_VERSION = "v0.3.0";
 
-const manualAssignments = {
-  投手: "佐藤",
-  捕手: null,
-  一塁: "鈴木",
-  二塁: null,
-  遊撃: null,
-  三塁: null,
-  左翼: null,
-  中堅: null,
-  右翼: null,
+const state = {
+  screen: "top", // 現在の画面
+
+  members: [],           // CSVから読み込んだ全メンバー
+  activeMembers: [],     // 今日の出場者（名前配列）
+
+  manualAssignments: {   // 守備固定
+    投手: null,
+    捕手: null,
+    一塁: null,
+    二塁: null,
+    三塁: null,
+    遊撃: null,
+    左翼: null,
+    中堅: null,
+    右翼: null,
+  },
+
+  result: null,          // 自動決定結果
 };
 
-let members = [];
+function goTo(screen) {
+  state.screen = screen;
+  render();
+}
 
 function renderResult(assignments, dhMembers) {
   const tableBody = document.getElementById("defenseTable");
