@@ -22,9 +22,47 @@ const state = {
   result: null,          // 自動決定結果
 };
 
+const screenHistory = [];
+
+function goTo(screen) {
+  screenHistory.push(state.screen);
+  state.screen = screen;
+  render();
+}
+
+function goBack() {
+  const prev = screenHistory.pop();
+  if (prev) {
+    state.screen = prev;
+    render();
+  }
+}
+
 function goTo(screen) {
   state.screen = screen;
   render();
+}
+
+function render() {
+  document.querySelectorAll(".screen").forEach(el => {
+    el.classList.add("hidden");
+  });
+
+  document
+    .getElementById(`screen-${state.screen}`)
+    .classList.remove("hidden");
+
+  switch (state.screen) {
+    case "members":
+      renderMemberSelection();
+      break;
+    case "manual":
+      renderManualAssignment();
+      break;
+    case "result":
+      renderResult(state.result.assignments, state.result.dh);
+      break;
+  }
 }
 
 function renderResult(assignments, dhMembers) {
@@ -184,6 +222,10 @@ async function loadSheetCSV() {
   const res = await fetch(SHEET_CSV_URL);
   return await res.text();
 }
+
+document.querySelectorAll(".backBtn").forEach(btn => {
+  btn.addEventListener("click", goBack);
+});
 
 document.addEventListener("DOMContentLoaded", () => {
   const button = document.getElementById("loadMembersBtn");
