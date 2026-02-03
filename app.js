@@ -1,11 +1,11 @@
 const APP_TITLE = "草野球オーダー決定アプリ（試作）";
-const APP_VERSION = "v0.3.0";
+const APP_VERSION = "v0.3.1";
 
 const state = {
   screen: "top", // 現在の画面
 
   members: [],           // CSVから読み込んだ全メンバー
-  activeMembers: [],     // 今日の出場者（名前配列）
+  activeMembers: [],     // 今日の出場者（memberオブジェクト配列）
 
   manualAssignments: {   // 守備固定
     投手: null,
@@ -25,16 +25,16 @@ const state = {
 const screenHistory = [];
 
 function goTo(screen) {
-  screenHistory.push(JSON.parse(JSON.stringify(state)));
+  screenHistory.push(state.screen);
   state.screen = screen;
   render();
 }
 
 function goBack() {
-  const prevState = screenHistory.pop();
-  if (!prevState) return;
+  const prevScreen = screenHistory.pop();
+  if (!prevScreen) return;
 
-  Object.assign(state, prevState);
+  state.screen = prevScreen;
   render();
 }
 
@@ -156,8 +156,12 @@ function runAssignment() {
   const availableMembers = getUnusedMembers(state.manualAssignments, state.activeMembers);
   // レアポジション優先
   emptyPositions.sort((a, b) => {
-    const countA = availableMembers.filter(m => m.positions[a]).length;
-    const countB = availableMembers.filter(m => m.positions[b]).length;
+    const countA = availableMembers.filter(
+      m => m.positions[a] !== "ng"
+    ).length;
+    const countB = availableMembers.filter(
+      m => m.positions[b] !== "ng"
+    ).length;
     return countA - countB;
   });
 
@@ -173,13 +177,15 @@ function runAssignment() {
     ...result.assignments
   };
 
-  const dhMembers = result.remainingMembers.map(m => m.name);
+  const dhMembers = result.remainingMembers
+    .filter(m => m.positions.DH !== "ng")
+    .map(m => m.name);
 
-  renderResult(finalAssignments, dhMembers);
   state.result = {
     assignments: finalAssignments,
     dh: dhMembers
   };
+  goTo("result");
   return true;
 }
 
@@ -223,8 +229,22 @@ async function loadSheetCSV() {
   return await res.text();
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+
+  // ① GoogleスプレッドシートCSVを読み込む
+  const csvText = await loadSheetCSV();
+
+  // ② CSV → memberオブジェクト配列
+  state.members = csvToMembers(csvText);
+
+  // ③ ひとまず全員出場扱い（※後でチェックボックスに差し替える）
+  state.activeMembers = [...state.members];
+
+  // ④ 戻るボタン
   document.querySelectorAll(".backBtn").forEach(btn => {
     btn.addEventListener("click", goBack);
   });
+
+  // ⑤ 初期画面描画
+  render();
 });
