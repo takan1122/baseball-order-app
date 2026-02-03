@@ -1,5 +1,5 @@
 const APP_TITLE = "草野球オーダー決定アプリ（試作）";
-const APP_VERSION = "v0.1.2";
+const APP_VERSION = "v0.2.0";
 
 const manualAssignments = {
   投手: "佐藤",
@@ -13,116 +13,7 @@ const manualAssignments = {
   右翼: null,
 };
 
-const members = [
-  {
-    name: "佐藤",
-    positions: {
-      投手: "hope", 捕手: "ng",   一塁: "ok",
-      二塁: "ng",   遊撃: "ng",   三塁: "ng",
-      左翼: "ng",   中堅: "ng",   右翼: "ng",
-      DH:   "ng",
-    }
-  },
-  {
-    name: "山本",
-    positions: {
-      投手: "ng",   捕手: "hope", 一塁: "ng",
-      二塁: "ng",   遊撃: "ng",   三塁: "ok",
-      左翼: "ng",   中堅: "ng",   右翼: "ng",
-      DH:   "ok",
-    }
-  },
-  {
-    name: "鈴木",
-    positions: {
-      投手: "ng",   捕手: "ng",   一塁: "hope",
-      二塁: "ng",   遊撃: "ng",   三塁: "ng",
-      左翼: "ng",   中堅: "ng",   右翼: "ok",
-      DH:   "ok",
-    }
-  },
-  {
-    name: "中村",
-    positions: {
-      投手: "ng",   捕手: "ng",   一塁: "ng",
-      二塁: "hope", 遊撃: "ok",   三塁: "ng",
-      左翼: "ng",   中堅: "ng",   右翼: "ng",
-      DH:   "ng",
-    }
-  },
-  {
-    name: "高橋",
-    positions: {
-      投手: "ng",   捕手: "ng",   一塁: "ng",
-      二塁: "ng",   遊撃: "hope", 三塁: "ok",
-      左翼: "ng",   中堅: "ng",   右翼: "ng",
-      DH:   "ng",
-    }
-  },
-  {
-    name: "田中",
-    positions: {
-      投手: "ng",   捕手: "ng",   一塁: "ng",
-      二塁: "ng",   遊撃: "ng",   三塁: "ng",
-      左翼: "hope", 中堅: "ok",   右翼: "ng",
-      DH:   "ok",
-    }
-  },
-  {
-    name: "伊藤",
-    positions: {
-      投手: "ng",   捕手: "ng",   一塁: "ng",
-      二塁: "ng",   遊撃: "ng",   三塁: "ng",
-      左翼: "ng",   中堅: "hope", 右翼: "ok",
-      DH:   "ok",
-    }
-  },
-  {
-    name: "渡辺",
-    positions: {
-      投手: "ng",   捕手: "ng",   一塁: "ok",
-      二塁: "ng",   遊撃: "ng",   三塁: "hope",
-      左翼: "ng",   中堅: "ng",   右翼: "ng",
-      DH:   "ng",
-    }
-  },
-  {
-    name: "小林",
-    positions: {
-      投手: "ng",   捕手: "ng",   一塁: "ng",
-      二塁: "ok",   遊撃: "ng",   三塁: "ng",
-      左翼: "hope", 中堅: "ng",   右翼: "ng",
-      DH:   "ok",
-    }
-  },
-  {
-    name: "加藤",
-    positions: {
-      投手: "ng",   捕手: "ng",   一塁: "ng",
-      二塁: "ng",   遊撃: "ng",   三塁: "ng",
-      左翼: "ng",   中堅: "ok",   右翼: "hope",
-      DH:   "ok",
-    }
-  },
-  {
-    name: "吉田",
-    positions: {
-      投手: "ng",   捕手: "ng",   一塁: "ng",
-      二塁: "ng",   遊撃: "ng",   三塁: "ng",
-      左翼: "ok",   中堅: "ng",   右翼: "hope",
-      DH:   "hope",
-    }
-  },
-  {
-    name: "山田",
-    positions: {
-      投手: "ng",   捕手: "ng",   一塁: "ok",
-      二塁: "hope", 遊撃: "ng",   三塁: "ng",
-      左翼: "ng",   中堅: "ng",   右翼: "ng",
-      DH:   "ng",
-    }
-  }
-];
+let members = [];
 
 function renderResult(assignments, dhMembers) {
   const tableBody = document.getElementById("defenseTable");
@@ -242,18 +133,65 @@ function runAssignment() {
   return true;
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  const loadBtn = document.getElementById("loadMembersBtn");
-  const shuffleBtn = document.getElementById("shuffleBtn");
+function csvToMembers(csv) {
+  const lines = csv.trim().split("\n").map(l => l.split(","));
+  const headers = lines.shift();
 
-  loadBtn.addEventListener("click", () => {
-    const ok = runAssignment();
-    if (ok) {
-      shuffleBtn.disabled = false;
-    }
-  });
+  function conv(v) {
+    if (v === "希望") return "hope";
+    if (v === "可能") return "ok";
+    return "ng";
+  }
 
-  shuffleBtn.addEventListener("click", () => {
-    runAssignment();
+  return lines.map(row => {
+    const r = {};
+    headers.forEach((h, i) => r[h] = row[i]);
+
+    return {
+      name: r["名前"],
+      positions: {
+        投手: conv(r["投手"]),
+        捕手: conv(r["捕手"]),
+        一塁: conv(r["一塁"]),
+        二塁: conv(r["二塁"]),
+        三塁: conv(r["三塁"]),
+        遊撃: conv(r["遊撃"]),
+        左翼: conv(r["左翼"]),
+        中堅: conv(r["中堅"]),
+        右翼: conv(r["右翼"]),
+        DH:   conv(r["DH"])
+      }
+    };
   });
+}
+
+const SHEET_CSV_URL =
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vT3sgmk9NHOJA3Nk6j_4V-8NBMt8VdHqZupreWNoL4xET8f03FhLPSv6zq-PyTPwnRTb1Tz8PzNNAXW/pub?gid=0&single=true&output=csv";
+
+async function loadSheetCSV() {
+  const res = await fetch(SHEET_CSV_URL);
+  return await res.text();
+}
+
+button.addEventListener("click", async () => {
+  const csv = await loadSheetCSV();
+  members = csvToMembers(csv);
+
+  console.log("読み込んだメンバー:", members);
+
+  const emptyPositions = getEmptyPositions(manualAssignments);
+  const availableMembers = getUnusedMembers(manualAssignments, members);
+
+  const result = autoAssign(emptyPositions, availableMembers);
+
+  if (!result.ok) {
+    console.error(result.reason);
+  } else {
+    const finalAssignments = {
+      ...manualAssignments,
+      ...result.assignments
+    };
+    console.log("最終守備:", finalAssignments);
+    console.log("DH候補:", result.remainingMembers.map(m => m.name));
+  }
 });
