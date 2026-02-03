@@ -8,7 +8,20 @@
   <h1>草野球オーダー決定アプリ（試作）</h1>
 
   <button id="loadMembersBtn">メンバー読み込み</button>
-  <pre id="output"></pre>
+
+  <h2>守備</h2>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>守備位置</th>
+        <th>名前</th>
+      </tr>
+    </thead>
+    <tbody id="defenseTable"></tbody>
+  </table>
+
+  <h2>DH候補</h2>
+  <ul id="dhList"></ul>
 
   <script src="app.js" defer></script>
 </body>
