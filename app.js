@@ -43,7 +43,7 @@ const members = [
     positions: {
       投手: false, 捕手: false, 一塁: false,
       二塁: false, 遊撃: false, 三塁: true,
-      左翼: true, 中堅: false, 右翼: false,
+      左翼: false, 中堅: false, 右翼: false,
     }
   },
   {
@@ -51,7 +51,23 @@ const members = [
     positions: {
       投手: false, 捕手: false, 一塁: false,
       二塁: false, 遊撃: false, 三塁: false,
-      左翼: false, 中堅: true, 右翼: true,
+      左翼: true, 中堅: false, 右翼: false,
+    }
+  },
+  {
+    name: "小林",
+    positions: {
+      投手: false, 捕手: false, 一塁: false,
+      二塁: false, 遊撃: false, 三塁: false,
+      左翼: false, 中堅: true, 右翼: false,
+    }
+  },
+  {
+    name: "加藤",
+    positions: {
+      投手: false, 捕手: false, 一塁: false,
+      二塁: false, 遊撃: false, 三塁: false,
+      左翼: false, 中堅: false, 右翼: true,
     }
   },
   {
@@ -68,22 +84,6 @@ const members = [
       投手: false, 捕手: false, 一塁: false,
       二塁: true, 遊撃: false, 三塁: false,
       左翼: false, 中堅: false, 右翼: false,
-    }
-  },
-  {
-    name: "小林",
-    positions: {
-      投手: false, 捕手: false, 一塁: false,
-      二塁: false, 遊撃: false, 三塁: false,
-      左翼: true, 中堅: false, 右翼: true,
-    }
-  },
-  {
-    name: "加藤",
-    positions: {
-      投手: false, 捕手: false, 一塁: false,
-      二塁: false, 遊撃: false, 三塁: false,
-      左翼: false, 中堅: true, 右翼: false,
     }
   }
 ];
