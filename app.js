@@ -102,6 +102,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     console.log(`=== ${APP_TITLE} ${APP_VERSION} ===`);
 
+    emptyPositions.sort((a, b) => {
+      const countA = availableMembers.filter(m => m.positions[a]).length;
+      const countB = availableMembers.filter(m => m.positions[b]).length;
+      return countA - countB;
+    });
+
     const result = autoAssign(emptyPositions, availableMembers);
 
     if (!result.ok) {
