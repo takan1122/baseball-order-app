@@ -1,6 +1,5 @@
-alert("app.js 読み込まれた");
 const APP_TITLE = "草野球オーダー決定アプリ（試作）";
-const APP_VERSION = "v0.3.4";
+const APP_VERSION = "v0.3.5";
 
 const state = {
   screen: "top", // 現在の画面
