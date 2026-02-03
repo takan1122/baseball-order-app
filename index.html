@@ -4,26 +4,30 @@
   <meta charset="UTF-8" />
   <title>草野球オーダー決定アプリ</title>
 </head>
-<body>
-  <h1>草野球オーダー決定アプリ（試作）</h1>
+<div id="screen-top" class="screen">
+  <h1>草野球オーダー決定</h1>
+  <button id="startBtn">開始</button>
+</div>
 
-  <button id="loadMembersBtn">メンバー読み込み</button>
-  <button id="shuffleBtn" disabled>再抽選</button>
+<div id="screen-members" class="screen hidden">
+  <h2>出場者選択</h2>
+  <div id="memberCheckboxes"></div>
+  <button class="backBtn">戻る</button>
+  <button id="toManualBtn">次へ</button>
+</div>
 
-  <h2>守備</h2>
-  <table border="1">
-    <thead>
-      <tr>
-        <th>守備位置</th>
-        <th>名前</th>
-      </tr>
-    </thead>
-    <tbody id="defenseTable"></tbody>
-  </table>
+<div id="screen-manual" class="screen hidden">
+  <h2>守備位置 手動決定</h2>
+  <div id="manualTable"></div>
+  <button class="backBtn">戻る</button>
+  <button id="toResultBtn">自動決定</button>
+</div>
 
-  <h2>DH候補</h2>
+<div id="screen-result" class="screen hidden">
+  <h2>自動決定結果</h2>
+  <table id="defenseTable"></table>
   <ul id="dhList"></ul>
-
-  <script src="app.js" defer></script>
+  <button class="backBtn">戻る</button>
+</div>
 </body>
 </html>
