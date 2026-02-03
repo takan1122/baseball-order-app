@@ -38,11 +38,6 @@ function goBack() {
   }
 }
 
-function goTo(screen) {
-  state.screen = screen;
-  render();
-}
-
 function render() {
   document.querySelectorAll(".screen").forEach(el => {
     el.classList.add("hidden");
@@ -54,10 +49,10 @@ function render() {
 
   switch (state.screen) {
     case "members":
-      renderMemberSelection();
+      // TODO: 後で実装
       break;
     case "manual":
-      renderManualAssignment();
+      // TODO: 後で実装
       break;
     case "result":
       renderResult(state.result.assignments, state.result.dh);
@@ -155,9 +150,8 @@ function autoAssign(emptyPositions, availableMembers) {
 }
 
 function runAssignment() {
-  const emptyPositions = getEmptyPositions(manualAssignments);
-  const availableMembers = getUnusedMembers(manualAssignments, members);
-
+  const emptyPositions = getEmptyPositions(state.manualAssignments);
+  const availableMembers = getUnusedMembers(state.manualAssignments, state.activeMembers);
   // レアポジション優先
   emptyPositions.sort((a, b) => {
     const countA = availableMembers.filter(m => m.positions[a]).length;
