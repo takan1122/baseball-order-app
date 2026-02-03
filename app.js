@@ -1,5 +1,5 @@
 const APP_TITLE = "草野球オーダー決定アプリ（試作）";
-const APP_VERSION = "v0.1.1";
+const APP_VERSION = "v0.1.2";
 
 const manualAssignments = {
   投手: "佐藤",
