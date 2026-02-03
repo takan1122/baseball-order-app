@@ -1,5 +1,5 @@
 const APP_TITLE = "草野球オーダー決定アプリ（試作）";
-const APP_VERSION = "v0.3.1";
+const APP_VERSION = "v0.3.2";
 
 const state = {
   screen: "top", // 現在の画面
@@ -230,21 +230,27 @@ async function loadSheetCSV() {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    console.log("DOMContentLoaded start");
 
-  // ① GoogleスプレッドシートCSVを読み込む
-  const csvText = await loadSheetCSV();
+    // CSV読み込み
+    const csvText = await loadSheetCSV();
+    state.members = csvToMembers(csvText);
+    state.activeMembers = [...state.members];
 
-  // ② CSV → memberオブジェクト配列
-  state.members = csvToMembers(csvText);
+  } catch (e) {
+    console.error("初期化失敗", e);
 
-  // ③ ひとまず全員出場扱い（※後でチェックボックスに差し替える）
-  state.activeMembers = [...state.members];
+    // フォールバック（最低限動かす）
+    state.members = [];
+    state.activeMembers = [];
+  }
 
-  // ④ 戻るボタン
+  // 戻るボタン
   document.querySelectorAll(".backBtn").forEach(btn => {
     btn.addEventListener("click", goBack);
   });
 
-  // ⑤ 初期画面描画
+  // 初期描画
   render();
 });
