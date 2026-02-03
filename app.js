@@ -166,38 +166,48 @@ function autoAssign(emptyPositions, availableMembers) {
 
   return { ok: true, assignments, remainingMembers };
 }
-document.addEventListener("DOMContentLoaded", () => {
-  const button = document.getElementById("loadMembersBtn");
 
-  if (!button) {
-    console.error("loadMembersBtn が見つかりません");
-    return;
+function runAssignment() {
+  const emptyPositions = getEmptyPositions(manualAssignments);
+  const availableMembers = getUnusedMembers(manualAssignments, members);
+
+  // レアポジション優先
+  emptyPositions.sort((a, b) => {
+    const countA = availableMembers.filter(m => m.positions[a]).length;
+    const countB = availableMembers.filter(m => m.positions[b]).length;
+    return countA - countB;
+  });
+
+  const result = autoAssign(emptyPositions, availableMembers);
+
+  if (!result.ok) {
+    alert(result.reason);
+    return false;
   }
 
-  button.addEventListener("click", () => {
-    const emptyPositions = getEmptyPositions(manualAssignments);
-    const availableMembers = getUnusedMembers(manualAssignments, members);
+  const finalAssignments = {
+    ...manualAssignments,
+    ...result.assignments
+  };
 
-    emptyPositions.sort((a, b) => {
-      const countA = availableMembers.filter(m => m.positions[a]).length;
-      const countB = availableMembers.filter(m => m.positions[b]).length;
-      return countA - countB;
-    });
+  const dhMembers = result.remainingMembers.map(m => m.name);
 
-    const result = autoAssign(emptyPositions, availableMembers);
+  renderResult(finalAssignments, dhMembers);
+  return true;
+}
 
-    if (!result.ok) {
-      alert(result.reason);
-      return;
+document.addEventListener("DOMContentLoaded", () => {
+  const loadBtn = document.getElementById("loadMembersBtn");
+  const shuffleBtn = document.getElementById("shuffleBtn");
+
+  loadBtn.addEventListener("click", () => {
+    const ok = runAssignment();
+    if (ok) {
+      shuffleBtn.disabled = false;
     }
+  });
 
-    const finalAssignments = {
-      ...manualAssignments,
-      ...result.assignments
-    };
-
-    const dhMembers = result.remainingMembers.map(m => m.name);
-
-    renderResult(finalAssignments, dhMembers);
+  shuffleBtn.addEventListener("click", () => {
+    runAssignment();
   });
 });
