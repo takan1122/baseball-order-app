@@ -1,6 +1,6 @@
 alert("app.js 読み込まれた");
 const APP_TITLE = "草野球オーダー決定アプリ（試作）";
-const APP_VERSION = "v0.3.3";
+const APP_VERSION = "v0.3.4";
 
 const state = {
   screen: "top", // 現在の画面
@@ -250,6 +250,22 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 戻るボタン
   document.querySelectorAll(".backBtn").forEach(btn => {
     btn.addEventListener("click", goBack);
+  });
+
+  // **追加：画面遷移用ボタン**
+  document.getElementById("startBtn").addEventListener("click", () => {
+    console.log("開始ボタン押された");
+    goTo("members");
+  });
+
+  document.getElementById("toManualBtn").addEventListener("click", () => {
+    console.log("次へボタン押された");
+    goTo("manual");
+  });
+
+  document.getElementById("toResultBtn").addEventListener("click", () => {
+    console.log("自動決定ボタン押された");
+    runAssignment();
   });
 
   // 初期描画
