@@ -87,6 +87,44 @@ const members = [
     }
   }
 ];
+
+function renderResult(assignments, dhMembers) {
+  const tableBody = document.getElementById("defenseTable");
+  const dhList = document.getElementById("dhList");
+
+  // 初期化
+  tableBody.innerHTML = "";
+  dhList.innerHTML = "";
+
+  // 守備表
+  for (const [position, name] of Object.entries(assignments)) {
+    const tr = document.createElement("tr");
+
+    const tdPosition = document.createElement("td");
+    tdPosition.textContent = position;
+
+    const tdName = document.createElement("td");
+    tdName.textContent = name ?? "—";
+
+    tr.appendChild(tdPosition);
+    tr.appendChild(tdName);
+    tableBody.appendChild(tr);
+  }
+
+  // DH候補
+  if (dhMembers.length === 0) {
+    const li = document.createElement("li");
+    li.textContent = "なし";
+    dhList.appendChild(li);
+  } else {
+    dhMembers.forEach(name => {
+      const li = document.createElement("li");
+      li.textContent = name;
+      dhList.appendChild(li);
+    });
+  }
+}
+
 function pickRandom(array) {
   const index = Math.floor(Math.random() * array.length);
   return array[index];
@@ -140,8 +178,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const emptyPositions = getEmptyPositions(manualAssignments);
     const availableMembers = getUnusedMembers(manualAssignments, members);
 
-    console.log(`=== ${APP_TITLE} ${APP_VERSION} ===`);
-
     emptyPositions.sort((a, b) => {
       const countA = availableMembers.filter(m => m.positions[a]).length;
       const countB = availableMembers.filter(m => m.positions[b]).length;
@@ -151,17 +187,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const result = autoAssign(emptyPositions, availableMembers);
 
     if (!result.ok) {
-      console.error(result.reason);
-    } else {
-      const finalAssignments = {
-        ...manualAssignments,
-        ...result.assignments
-      };
-
-      const dhMembers = result.remainingMembers.map(m => m.name);
-
-      console.log("最終守備:", finalAssignments);
-      console.log("DH候補:", dhMembers);
+      alert(result.reason);
+      return;
     }
+
+    const finalAssignments = {
+      ...manualAssignments,
+      ...result.assignments
+    };
+
+    const dhMembers = result.remainingMembers.map(m => m.name);
+
+    renderResult(finalAssignments, dhMembers);
   });
 });
