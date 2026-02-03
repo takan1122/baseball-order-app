@@ -25,17 +25,17 @@ const state = {
 const screenHistory = [];
 
 function goTo(screen) {
-  screenHistory.push(state.screen);
+  screenHistory.push(JSON.parse(JSON.stringify(state)));
   state.screen = screen;
   render();
 }
 
 function goBack() {
-  const prev = screenHistory.pop();
-  if (prev) {
-    state.screen = prev;
-    render();
-  }
+  const prevState = screenHistory.pop();
+  if (!prevState) return;
+
+  Object.assign(state, prevState);
+  render();
 }
 
 function render() {
@@ -55,7 +55,9 @@ function render() {
       // TODO: 後で実装
       break;
     case "result":
-      renderResult(state.result.assignments, state.result.dh);
+      if (state.result) {
+        renderResult(state.result.assignments, state.result.dh);
+      }
       break;
   }
 }
@@ -167,7 +169,7 @@ function runAssignment() {
   }
 
   const finalAssignments = {
-    ...manualAssignments,
+    ...state.manualAssignments,
     ...result.assignments
   };
 
