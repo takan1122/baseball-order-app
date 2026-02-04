@@ -1,5 +1,5 @@
 const APP_TITLE = "草野球オーダー決定アプリ（試作）";
-const APP_VERSION = "v0.5.0";
+const APP_VERSION = "v0.6.0";
 
 const state = {
   screen: "top", // 現在の画面
@@ -261,6 +261,12 @@ function runAssignment() {
     ...result.assignments
   };
 
+  const check = checkDefenseComplete(finalAssignments);
+  if (!check.ok) {
+    alert(check.message);
+    return false;
+  }
+  
   const dhMembers = result.remainingMembers
     .filter(m => m.positions.DH !== "ng")
     .map(m => m.name);
@@ -279,6 +285,20 @@ function runAssignment() {
   );
   
   return true;
+}
+
+function checkDefenseComplete(assignments) {
+  const unassigned = Object.entries(assignments)
+    .filter(([_, name]) => name == null || name === "")
+    .map(([pos]) => pos);
+
+  if (unassigned.length > 0) {
+    return {
+      ok: false,
+      message: "守備位置が成立しません。\n未割当: " + unassigned.join("、")
+    };
+  }
+  return { ok: true };
 }
 
 function csvToMembers(csv) {
