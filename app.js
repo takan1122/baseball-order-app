@@ -1,5 +1,5 @@
 const APP_TITLE = "草野球オーダー決定アプリ（試作）";
-const APP_VERSION = "v0.6.1";
+const APP_VERSION = "v0.6.2";
 
 const state = {
   screen: "top", // 現在の画面
@@ -259,9 +259,15 @@ function autoAssign(emptyPositions, availableMembers) {
 function runAssignment() {
   console.log("=== runAssignment ===");
   console.log("manualAssignments:", state.manualAssignments);
-  console.log("activeMembers:", state.activeMembers.map(m => m.name));
   const emptyPositions = getEmptyPositions(state.manualAssignments);
   const availableMembers = getUnusedMembers(state.manualAssignments, state.activeMembers);
+    console.log("activeMembers:", state.activeMembers.map(m => m.name));
+
+  console.log(
+    "[before assign]",
+    availableMembers.map(m => ({ name: m.name, DH: m.positions?.DH }))
+  );
+
   // レアポジション優先
   emptyPositions.sort((a, b) => {
     const countA = availableMembers.filter(
@@ -307,7 +313,10 @@ function runAssignment() {
       DH: m.positions.DH
     }))
   );
-  
+  console.log(
+    "[after assign]",
+    state.members.map(m => ({ name: m.name, DH: m.positions?.DH }))
+  );
   return true;
 }
 
@@ -383,6 +392,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     state.members = [];
     state.activeMembers = [];
   }
+
+  console.log(
+    "[after csv load]",
+    state.members.map(m => ({ name: m.name, DH: m.positions?.DH }))
+  );
 
   // 戻るボタン
   document.querySelectorAll(".backBtn").forEach(btn => {
