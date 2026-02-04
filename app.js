@@ -1,5 +1,5 @@
 const APP_TITLE = "草野球オーダー決定アプリ（試作）";
-const APP_VERSION = "v0.4.2";
+const APP_VERSION = "v0.4.3";
 
 const state = {
   screen: "top", // 現在の画面
@@ -253,8 +253,10 @@ function csvToMembers(csv) {
   const headers = lines.shift();
 
   function conv(v) {
-    if (v === "希望") return "hope";
-    if (v === "可能") return "ok";
+    if (!v) return "ng";
+    const s = v.trim();   // ← これが本体
+    if (s === "希望") return "hope";
+    if (s === "可能") return "ok";
     return "ng";
   }
 
