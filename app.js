@@ -1,5 +1,5 @@
 const APP_TITLE = "草野球オーダー決定アプリ（試作）";
-const APP_VERSION = "v0.6.0";
+const APP_VERSION = "v0.6.1";
 
 const state = {
   screen: "top", // 現在の画面
@@ -226,16 +226,40 @@ function autoAssign(emptyPositions, availableMembers) {
       ? candidates[0]
       : pickRandom(candidates);
 
+    console.log("assign", position);
+    console.log(
+      "candidates:",
+      candidates.map(m => m.name)
+    );
+    console.log("selected:", selected.name);
+
     assignments[position] = selected.name;
     remainingMembers = remainingMembers.filter(
       m => m.name !== selected.name
     );
+
+    console.log(
+      "remaining after",
+      position,
+      remainingMembers.map(m => m.name)
+    );
   }
+
+  console.log(
+    "final remaining:",
+    remainingMembers.map(m => ({
+      name: m.name,
+      DH: m.positions.DH
+    }))
+  );
 
   return { ok: true, assignments, remainingMembers };
 }
 
 function runAssignment() {
+  console.log("=== runAssignment ===");
+  console.log("manualAssignments:", state.manualAssignments);
+  console.log("activeMembers:", state.activeMembers.map(m => m.name));
   const emptyPositions = getEmptyPositions(state.manualAssignments);
   const availableMembers = getUnusedMembers(state.manualAssignments, state.activeMembers);
   // レアポジション優先
