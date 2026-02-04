@@ -1,5 +1,5 @@
 const APP_TITLE = "草野球オーダー決定アプリ（試作）";
-const APP_VERSION = "v0.4.3";
+const APP_VERSION = "v0.5.0";
 
 const state = {
   screen: "top", // 現在の画面
@@ -23,6 +23,39 @@ const state = {
 };
 
 const screenHistory = [];
+
+function renderMemberSelection() {
+  const container = document.getElementById("memberCheckboxes");
+  container.innerHTML = "";
+
+  state.members.forEach(member => {
+    const label = document.createElement("label");
+    label.style.display = "block";
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = true;
+
+    checkbox.addEventListener("change", () => {
+      if (checkbox.checked) {
+        if (!state.activeMembers.includes(member)) {
+          state.activeMembers.push(member);
+        }
+      } else {
+        state.activeMembers = state.activeMembers.filter(
+          m => m !== member
+        );
+      }
+    });
+
+    label.appendChild(checkbox);
+    label.appendChild(document.createTextNode(" " + member.name));
+    container.appendChild(label);
+  });
+
+  // 初期状態：全員出場
+  state.activeMembers = [...state.members];
+}
 
 function renderManualAssignments() {
   const tbody = document.getElementById("manualTable");
@@ -98,7 +131,7 @@ function render() {
 
   switch (state.screen) {
     case "members":
-      // TODO: 後で実装
+      renderMemberSelection();
       break;
     case "manual":
       renderManualAssignments();
@@ -320,6 +353,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   document.getElementById("toManualBtn").addEventListener("click", () => {
     console.log("次へボタン押された");
+    if (state.activeMembers.length < 9) {
+      alert("出場者が9人未満です。守備が成立しません。");
+      return;
+    }
     goTo("manual");
   });
 
