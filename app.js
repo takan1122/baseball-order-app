@@ -1,5 +1,5 @@
 const APP_TITLE = "草野球オーダー決定アプリ（試作）";
-const APP_VERSION = "v0.3.5";
+const APP_VERSION = "v0.3.6";
 
 const state = {
   screen: "top", // 現在の画面
@@ -78,7 +78,7 @@ function renderResult(assignments, dhMembers) {
     tdPosition.textContent = position;
 
     const tdName = document.createElement("td");
-    tdName.textContent = name ?? "—";
+    tdName.textContent = name != null ? name : "—";
 
     tr.appendChild(tdPosition);
     tr.appendChild(tdName);
