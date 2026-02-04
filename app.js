@@ -1,5 +1,5 @@
 const APP_TITLE = "草野球オーダー決定アプリ（試作）";
-const APP_VERSION = "v0.3.6";
+const APP_VERSION = "v0.4.0";
 
 const state = {
   screen: "top", // 現在の画面
@@ -23,6 +23,55 @@ const state = {
 };
 
 const screenHistory = [];
+
+function renderManualAssignments() {
+  const tbody = document.getElementById("manualTable");
+  tbody.innerHTML = "";
+
+  const positions = Object.keys(state.manualAssignments);
+
+  positions.forEach(position => {
+    const tr = document.createElement("tr");
+
+    // 守備位置
+    const tdPos = document.createElement("td");
+    tdPos.textContent = position;
+
+    // セレクト
+    const tdSelect = document.createElement("td");
+    const select = document.createElement("select");
+
+    // 未指定
+    const emptyOpt = document.createElement("option");
+    emptyOpt.value = "";
+    emptyOpt.textContent = "（自動決定）";
+    select.appendChild(emptyOpt);
+
+    // メンバー一覧
+    state.activeMembers.forEach(m => {
+      const opt = document.createElement("option");
+      opt.value = m.name;
+      opt.textContent = m.name;
+
+      if (state.manualAssignments[position] === m.name) {
+        opt.selected = true;
+      }
+      select.appendChild(opt);
+    });
+
+    // 変更時に state に反映
+    select.addEventListener("change", () => {
+      state.manualAssignments[position] =
+        select.value === "" ? null : select.value;
+    });
+
+    tdSelect.appendChild(select);
+
+    tr.appendChild(tdPos);
+    tr.appendChild(tdSelect);
+    tbody.appendChild(tr);
+  });
+}
 
 function goTo(screen) {
   screenHistory.push(state.screen);
@@ -52,7 +101,7 @@ function render() {
       // TODO: 後で実装
       break;
     case "manual":
-      // TODO: 後で実装
+      renderManualAssignments();
       break;
     case "result":
       if (state.result) {
