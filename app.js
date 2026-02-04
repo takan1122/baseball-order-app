@@ -1,5 +1,5 @@
 const APP_TITLE = "草野球オーダー決定アプリ（試作）";
-const APP_VERSION = "v0.4.0";
+const APP_VERSION = "v0.4.1";
 
 const state = {
   screen: "top", // 現在の画面
@@ -37,38 +37,38 @@ function renderManualAssignments() {
     const tdPos = document.createElement("td");
     tdPos.textContent = position;
 
-    // セレクト
-    const tdSelect = document.createElement("td");
-    const select = document.createElement("select");
+    // 手入力欄
+    const tdInput = document.createElement("td");
+    const input = document.createElement("input");
+    input.type = "text";
+    input.placeholder = "空欄＝自動決定";
+    input.value = state.manualAssignments[position] ?? "";
 
-    // 未指定
-    const emptyOpt = document.createElement("option");
-    emptyOpt.value = "";
-    emptyOpt.textContent = "（自動決定）";
-    select.appendChild(emptyOpt);
+    input.addEventListener("input", () => {
+      const v = input.value.trim();
+      state.manualAssignments[position] = v === "" ? null : v;
+    });
 
-    // メンバー一覧
+    tdInput.appendChild(input);
+
+    // 既存メンバー quick ボタン
+    const tdButtons = document.createElement("td");
     state.activeMembers.forEach(m => {
-      const opt = document.createElement("option");
-      opt.value = m.name;
-      opt.textContent = m.name;
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = m.name;
 
-      if (state.manualAssignments[position] === m.name) {
-        opt.selected = true;
-      }
-      select.appendChild(opt);
+      btn.addEventListener("click", () => {
+        input.value = m.name;
+        state.manualAssignments[position] = m.name;
+      });
+
+      tdButtons.appendChild(btn);
     });
-
-    // 変更時に state に反映
-    select.addEventListener("change", () => {
-      state.manualAssignments[position] =
-        select.value === "" ? null : select.value;
-    });
-
-    tdSelect.appendChild(select);
 
     tr.appendChild(tdPos);
-    tr.appendChild(tdSelect);
+    tr.appendChild(tdInput);
+    tr.appendChild(tdButtons);
     tbody.appendChild(tr);
   });
 }
