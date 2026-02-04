@@ -1,5 +1,5 @@
 const APP_TITLE = "草野球オーダー決定アプリ（試作）";
-const APP_VERSION = "v0.4.1";
+const APP_VERSION = "v0.4.2";
 
 const state = {
   screen: "top", // 現在の画面
@@ -152,6 +152,7 @@ function pickRandom(array) {
   const index = Math.floor(Math.random() * array.length);
   return array[index];
 }
+
 function getEmptyPositions(manualAssignments) {
   return Object.keys(manualAssignments)
     .filter(position => manualAssignments[position] == null);
@@ -163,6 +164,7 @@ function getUnusedMembers(manualAssignments, members) {
   );
   return members.filter(m => !usedNames.has(m.name));
 }
+
 function autoAssign(emptyPositions, availableMembers) {
   const assignments = {};
   let remainingMembers = [...availableMembers];
@@ -235,6 +237,14 @@ function runAssignment() {
     dh: dhMembers
   };
   goTo("result");
+  console.log(
+    "remaining:",
+    result.remainingMembers.map(m => ({
+      name: m.name,
+      DH: m.positions.DH
+    }))
+  );
+  
   return true;
 }
 
