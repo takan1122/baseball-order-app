@@ -1,5 +1,5 @@
 const APP_TITLE = "草野球オーダー決定アプリ";
-const APP_VERSION = "v0.9.0";
+const APP_VERSION = "v0.9.1";  //「戻る」で前回のチェックボックスを復元
 
 const state = {
   screen: "top", // 現在の画面
@@ -34,7 +34,9 @@ function renderMemberSelection() {
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
-    checkbox.checked = false;
+
+    // ★ state.activeMembers を見て復元
+    checkbox.checked = state.activeMembers.includes(member);
 
     checkbox.addEventListener("change", () => {
       if (checkbox.checked) {
