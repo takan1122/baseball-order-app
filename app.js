@@ -1,5 +1,5 @@
 const APP_TITLE = "草野球オーダー決定アプリ";
-const APP_VERSION = "v0.9.1";  //「戻る」で前回のチェックボックスを復元
+const APP_VERSION = "v0.10.0";  //希望通りの人は青、可能の人は赤
 
 const state = {
   screen: "top", // 現在の画面
@@ -154,6 +154,9 @@ function render() {
 }
 
 function renderResult(assignments, dhMembers) {
+  const memberMap = new Map(
+    state.members.map(m => [m.name, m])
+  );
   const tableBody = document.getElementById("defenseTable");
   const dhList = document.getElementById("dhList");
 
@@ -169,7 +172,21 @@ function renderResult(assignments, dhMembers) {
     tdPosition.textContent = position;
 
     const tdName = document.createElement("td");
-    tdName.textContent = name != null ? name : "—";
+
+    if (name != null) {
+      tdName.textContent = name;
+
+      const member = memberMap.get(name);
+      const status = member?.positions[position];
+
+      if (status === "hope") {
+        tdName.style.color = "blue";
+      } else if (status === "ok") {
+        tdName.style.color = "red";
+      }
+    } else {
+      tdName.textContent = "—";
+    }
 
     tr.appendChild(tdPosition);
     tr.appendChild(tdName);
@@ -185,6 +202,16 @@ function renderResult(assignments, dhMembers) {
     dhMembers.forEach(name => {
       const li = document.createElement("li");
       li.textContent = name;
+
+      const member = memberMap.get(name);
+      const status = member?.positions.DH;
+
+      if (status === "hope") {
+        li.style.color = "blue";
+      } else if (status === "ok") {
+        li.style.color = "red";
+      }
+
       dhList.appendChild(li);
     });
   }
