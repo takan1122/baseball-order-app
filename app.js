@@ -1,5 +1,5 @@
 const APP_TITLE = "草野球オーダー決定アプリ（試作）";
-const APP_VERSION = "v0.7.6";
+const APP_VERSION = "v0.7.7";
 
 const DEFENSE_POSITIONS = [
   "投手",
@@ -317,12 +317,6 @@ function runAssignment() {
     ...result.assignments
   };
 
-  const assignedDefenseNames = new Set(
-    DEFENSE_POSITIONS
-      .map(pos => finalAssignments[pos])
-      .filter(Boolean)
-  );
-  
   const check = checkDefenseComplete(finalAssignments);
   if (!check.ok) {
     alert(check.message);
