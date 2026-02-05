@@ -1,5 +1,5 @@
 const APP_TITLE = "草野球オーダー決定アプリ（試作）";
-const APP_VERSION = "v0.8.0";
+const APP_VERSION = "v0.8.1";
 
 const state = {
   screen: "top", // 現在の画面
@@ -58,20 +58,25 @@ function renderMemberSelection() {
 }
 
 function renderManualAssignments() {
-  const tbody = document.getElementById("manualTable");
-  tbody.innerHTML = "";
+  const container = document.getElementById("manualList");
+  container.innerHTML = "";
 
-  const positions = Object.keys(state.manualAssignments);
+  const positions = [
+    ...Object.keys(state.manualAssignments),
+    "DH"
+  ];
 
   positions.forEach(position => {
-    const tr = document.createElement("tr");
+    const card = document.createElement("div");
+    card.className = "manual-card";
 
-    // 守備位置
-    const tdPos = document.createElement("td");
-    tdPos.textContent = position;
+    const title = document.createElement("h4");
+    title.textContent = position;
+    card.appendChild(title);
 
-    // 手入力欄
-    const tdInput = document.createElement("td");
+    const inputWrap = document.createElement("div");
+    inputWrap.className = "manual-input";
+
     const input = document.createElement("input");
     input.type = "text";
     input.placeholder = "空欄＝自動決定";
@@ -82,27 +87,34 @@ function renderManualAssignments() {
       state.manualAssignments[position] = v === "" ? null : v;
     });
 
-    tdInput.appendChild(input);
+    const toggleBtn = document.createElement("button");
+    toggleBtn.textContent = "選択";
 
-    // 既存メンバー quick ボタン
-    const tdButtons = document.createElement("td");
+    inputWrap.appendChild(input);
+    inputWrap.appendChild(toggleBtn);
+    card.appendChild(inputWrap);
+
+    const picker = document.createElement("div");
+    picker.className = "member-picker";
+
     state.activeMembers.forEach(m => {
       const btn = document.createElement("button");
-      btn.type = "button";
       btn.textContent = m.name;
-
-      btn.addEventListener("click", () => {
+      btn.onclick = () => {
         input.value = m.name;
         state.manualAssignments[position] = m.name;
-      });
-
-      tdButtons.appendChild(btn);
+        picker.style.display = "none";
+      };
+      picker.appendChild(btn);
     });
 
-    tr.appendChild(tdPos);
-    tr.appendChild(tdInput);
-    tr.appendChild(tdButtons);
-    tbody.appendChild(tr);
+    toggleBtn.onclick = () => {
+      picker.style.display =
+        picker.style.display === "none" ? "block" : "none";
+    };
+
+    card.appendChild(picker);
+    container.appendChild(card);
   });
 }
 
