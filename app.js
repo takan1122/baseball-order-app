@@ -1,5 +1,5 @@
 const APP_TITLE = "草野球オーダー決定アプリ（試作）";
-const APP_VERSION = "v0.7.2";
+const APP_VERSION = "v0.7.3";
 
 const DEFENSE_POSITIONS = [
   "投手",
@@ -69,21 +69,6 @@ function renderMemberSelection() {
   // 初期状態：全員出場
   state.activeMembers = [...state.members];
 }
-
-const assignedDefenseNames = new Set(
-  Object.values(finalAssignments)
-    .filter((_, i) => DEFENSE_POSITIONS.includes(Object.keys(finalAssignments)[i]))
-    .filter(Boolean)
-);
-
-const dhMembers = state.manualAssignments.DH
-  ? [state.manualAssignments.DH]
-  : state.activeMembers
-      .filter(m =>
-        !assignedDefenseNames.has(m.name) &&
-        m.positions.DH !== "ng"
-      )
-      .map(m => m.name);
 
 function renderManualAssignments() {
   const tbody = document.getElementById("manualTable");
@@ -332,6 +317,21 @@ function runAssignment() {
     ...result.assignments
   };
 
+  const assignedDefenseNames = new Set(
+    DEFENSE_POSITIONS
+      .map(pos => finalAssignments[pos])
+      .filter(Boolean)
+  );
+
+  const dhMembers = state.manualAssignments.DH
+    ? [state.manualAssignments.DH]
+    : state.activeMembers
+        .filter(m =>
+          !assignedDefenseNames.has(m.name) &&
+          m.positions.DH !== "ng"
+        )
+        .map(m => m.name);
+  
   const check = checkDefenseComplete(finalAssignments);
   if (!check.ok) {
     alert(check.message);
