@@ -1,5 +1,5 @@
-const APP_TITLE = "草野球オーダー決定アプリ（試作）";
-const APP_VERSION = "v0.8.2";
+const APP_TITLE = "草野球オーダー決定アプリ";
+const APP_VERSION = "v0.9.0";
 
 const state = {
   screen: "top", // 現在の画面
@@ -34,7 +34,7 @@ function renderMemberSelection() {
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
-    checkbox.checked = true;
+    checkbox.checked = false;
 
     checkbox.addEventListener("change", () => {
       if (checkbox.checked) {
@@ -52,9 +52,6 @@ function renderMemberSelection() {
     label.appendChild(document.createTextNode(" " + member.name));
     container.appendChild(label);
   });
-
-  // 初期状態：全員出場
-  state.activeMembers = [...state.members];
 }
 
 function renderManualAssignments() {
@@ -393,7 +390,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // CSV読み込み
     const csvText = await loadSheetCSV();
     state.members = csvToMembers(csvText);
-    state.activeMembers = [...state.members];
+    state.activeMembers = [];
 
   } catch (e) {
     console.error("初期化失敗", e);
