@@ -1,5 +1,5 @@
 const APP_TITLE = "草野球オーダー決定アプリ（試作）";
-const APP_VERSION = "v0.7.3";
+const APP_VERSION = "v0.7.4";
 
 const DEFENSE_POSITIONS = [
   "投手",
@@ -337,12 +337,6 @@ function runAssignment() {
     alert(check.message);
     return false;
   }
-  
-  const dhMembers = state.manualAssignments.DH
-    ? [state.manualAssignments.DH]
-    : result.remainingMembers
-        .filter(m => m.positions.DH !== "ng")
-        .map(m => m.name);
 
   state.result = {
     assignments: finalAssignments,
