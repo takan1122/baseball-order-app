@@ -1,5 +1,17 @@
 const APP_TITLE = "草野球オーダー決定アプリ（試作）";
-const APP_VERSION = "v0.7.1";
+const APP_VERSION = "v0.7.2";
+
+const DEFENSE_POSITIONS = [
+  "投手",
+  "捕手",
+  "一塁",
+  "二塁",
+  "三塁",
+  "遊撃",
+  "左翼",
+  "中堅",
+  "右翼",
+];
 
 const state = {
   screen: "top", // 現在の画面
@@ -57,6 +69,21 @@ function renderMemberSelection() {
   // 初期状態：全員出場
   state.activeMembers = [...state.members];
 }
+
+const assignedDefenseNames = new Set(
+  Object.values(finalAssignments)
+    .filter((_, i) => DEFENSE_POSITIONS.includes(Object.keys(finalAssignments)[i]))
+    .filter(Boolean)
+);
+
+const dhMembers = state.manualAssignments.DH
+  ? [state.manualAssignments.DH]
+  : state.activeMembers
+      .filter(m =>
+        !assignedDefenseNames.has(m.name) &&
+        m.positions.DH !== "ng"
+      )
+      .map(m => m.name);
 
 function renderManualAssignments() {
   const tbody = document.getElementById("manualTable");
@@ -197,11 +224,6 @@ function pickRandom(array) {
   return array[index];
 }
 
-function getEmptyPositions(manualAssignments) {
-  return Object.keys(manualAssignments)
-    .filter(position => manualAssignments[position] == null);
-}
-
 function getUnusedMembers(manualAssignments, members) {
   const usedNames = new Set(
     Object.values(manualAssignments).filter(Boolean)
@@ -270,10 +292,17 @@ function autoAssign(emptyPositions, availableMembers) {
 function runAssignment() {
   console.log("=== runAssignment ===");
   console.log("manualAssignments:", state.manualAssignments);
-  const emptyPositions = getEmptyPositions(state.manualAssignments)
-    .filter(pos => pos !== "DH");
-  const availableMembers = getUnusedMembers(state.manualAssignments, state.activeMembers);
-    console.log("activeMembers:", state.activeMembers.map(m => m.name));
+  const emptyPositions = DEFENSE_POSITIONS.filter(
+    pos => state.manualAssignments[pos] == null
+  );
+  const defenseAssignments = {};
+    DEFENSE_POSITIONS.forEach(pos => {
+    defenseAssignments[pos] = state.manualAssignments[pos];
+  });
+
+  const availableMembers =
+    getUnusedMembers(defenseAssignments, state.activeMembers);
+  console.log("activeMembers:", state.activeMembers.map(m => m.name));
 
   console.log(
     "[before assign]",
