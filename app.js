@@ -1,5 +1,5 @@
 const APP_TITLE = "草野球オーダー決定アプリ（試作）";
-const APP_VERSION = "v0.8.1";
+const APP_VERSION = "v0.8.2";
 
 const state = {
   screen: "top", // 現在の画面
@@ -58,63 +58,61 @@ function renderMemberSelection() {
 }
 
 function renderManualAssignments() {
-  const container = document.getElementById("manualList");
-  container.innerHTML = "";
+  const tbody = document.getElementById("manualTable");
+  tbody.innerHTML = "";
 
-  const positions = [
-    ...Object.keys(state.manualAssignments),
-    "DH"
-  ];
+  const positions = Object.keys(state.manualAssignments);
 
   positions.forEach(position => {
-    const card = document.createElement("div");
-    card.className = "manual-card";
+    const tr = document.createElement("tr");
 
-    const title = document.createElement("h4");
-    title.textContent = position;
-    card.appendChild(title);
+    // 守備名
+    const tdPos = document.createElement("td");
+    tdPos.textContent = position;
 
-    const inputWrap = document.createElement("div");
-    inputWrap.className = "manual-input";
-
+    // 手入力
+    const tdInput = document.createElement("td");
     const input = document.createElement("input");
     input.type = "text";
-    input.placeholder = "空欄＝自動決定";
+    input.placeholder = "空欄＝自動";
     input.value = state.manualAssignments[position] ?? "";
 
-    input.addEventListener("input", () => {
+    input.oninput = () => {
       const v = input.value.trim();
       state.manualAssignments[position] = v === "" ? null : v;
-    });
+    };
+    tdInput.appendChild(input);
 
-    const toggleBtn = document.createElement("button");
-    toggleBtn.textContent = "選択";
+    // プルダウン
+    const tdSelect = document.createElement("td");
+    const select = document.createElement("select");
 
-    inputWrap.appendChild(input);
-    inputWrap.appendChild(toggleBtn);
-    card.appendChild(inputWrap);
-
-    const picker = document.createElement("div");
-    picker.className = "member-picker";
+    const empty = document.createElement("option");
+    empty.value = "";
+    empty.textContent = "—";
+    select.appendChild(empty);
 
     state.activeMembers.forEach(m => {
-      const btn = document.createElement("button");
-      btn.textContent = m.name;
-      btn.onclick = () => {
-        input.value = m.name;
-        state.manualAssignments[position] = m.name;
-        picker.style.display = "none";
-      };
-      picker.appendChild(btn);
+      const opt = document.createElement("option");
+      opt.value = m.name;
+      opt.textContent = m.name;
+      select.appendChild(opt);
     });
 
-    toggleBtn.onclick = () => {
-      picker.style.display =
-        picker.style.display === "none" ? "block" : "none";
+    select.onchange = () => {
+      if (select.value) {
+        input.value = select.value;
+        state.manualAssignments[position] = select.value;
+        select.value = "";
+      }
     };
 
-    card.appendChild(picker);
-    container.appendChild(card);
+    tdSelect.appendChild(select);
+
+    tr.appendChild(tdPos);
+    tr.appendChild(tdInput);
+    tr.appendChild(tdSelect);
+    tbody.appendChild(tr);
   });
 }
 
