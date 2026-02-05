@@ -1,5 +1,5 @@
 const APP_TITLE = "草野球オーダー決定アプリ（試作）";
-const APP_VERSION = "v0.6.2";
+const APP_VERSION = "v0.7.0";
 
 const state = {
   screen: "top", // 現在の画面
@@ -17,6 +17,7 @@ const state = {
     左翼: null,
     中堅: null,
     右翼: null,
+    DH: null,
   },
 
   result: null,          // 自動決定結果
@@ -66,42 +67,52 @@ function renderManualAssignments() {
   positions.forEach(position => {
     const tr = document.createElement("tr");
 
-    // 守備位置
+    // 守備名
     const tdPos = document.createElement("td");
     tdPos.textContent = position;
 
-    // 手入力欄
+    // 手入力
     const tdInput = document.createElement("td");
     const input = document.createElement("input");
     input.type = "text";
-    input.placeholder = "空欄＝自動決定";
+    input.placeholder = "空欄＝自動";
     input.value = state.manualAssignments[position] ?? "";
 
-    input.addEventListener("input", () => {
+    input.oninput = () => {
       const v = input.value.trim();
       state.manualAssignments[position] = v === "" ? null : v;
-    });
-
+    };
     tdInput.appendChild(input);
 
-    // 既存メンバー quick ボタン
-    const tdButtons = document.createElement("td");
+    // プルダウン
+    const tdSelect = document.createElement("td");
+    const select = document.createElement("select");
+
+    const empty = document.createElement("option");
+    empty.value = "";
+    empty.textContent = "—";
+    select.appendChild(empty);
+
     state.activeMembers.forEach(m => {
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.textContent = m.name;
-
-      btn.addEventListener("click", () => {
-        input.value = m.name;
-        state.manualAssignments[position] = m.name;
-      });
-
-      tdButtons.appendChild(btn);
+      const opt = document.createElement("option");
+      opt.value = m.name;
+      opt.textContent = m.name;
+      select.appendChild(opt);
     });
+
+    select.onchange = () => {
+      if (select.value) {
+        input.value = select.value;
+        state.manualAssignments[position] = select.value;
+        select.value = "";
+      }
+    };
+
+    tdSelect.appendChild(select);
 
     tr.appendChild(tdPos);
     tr.appendChild(tdInput);
-    tr.appendChild(tdButtons);
+    tr.appendChild(tdSelect);
     tbody.appendChild(tr);
   });
 }
@@ -297,9 +308,11 @@ function runAssignment() {
     return false;
   }
   
-  const dhMembers = result.remainingMembers
-    .filter(m => m.positions.DH !== "ng")
-    .map(m => m.name);
+  const dhMembers = state.manualAssignments.DH
+    ? [state.manualAssignments.DH]
+    : result.remainingMembers
+        .filter(m => m.positions.DH !== "ng")
+        .map(m => m.name);
 
   state.result = {
     assignments: finalAssignments,
