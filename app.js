@@ -1,5 +1,5 @@
 const APP_TITLE = "草野球オーダー決定アプリ";
-const APP_VERSION = "v0.10.0";  //希望通りの人は青、可能の人は赤
+const APP_VERSION = "v0.11.0";  //再実行ボタンの追加
 
 const state = {
   screen: "top", // 現在の画面
@@ -456,6 +456,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   document.getElementById("toResultBtn").addEventListener("click", () => {
     console.log("自動決定ボタン押された");
+    runAssignment();
+  });
+
+  document.getElementById("rerunBtn").addEventListener("click", () => {
+    console.log("再実行ボタン押された");
     runAssignment();
   });
 
