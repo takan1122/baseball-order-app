@@ -1,17 +1,5 @@
 const APP_TITLE = "草野球オーダー決定アプリ（試作）";
-const APP_VERSION = "v0.7.7";
-
-const DEFENSE_POSITIONS = [
-  "投手",
-  "捕手",
-  "一塁",
-  "二塁",
-  "三塁",
-  "遊撃",
-  "左翼",
-  "中堅",
-  "右翼",
-];
+const APP_VERSION = "v0.8.0";
 
 const state = {
   screen: "top", // 現在の画面
@@ -29,7 +17,6 @@ const state = {
     左翼: null,
     中堅: null,
     右翼: null,
-    DH: null,
   },
 
   result: null,          // 自動決定結果
@@ -79,52 +66,42 @@ function renderManualAssignments() {
   positions.forEach(position => {
     const tr = document.createElement("tr");
 
-    // 守備名
+    // 守備位置
     const tdPos = document.createElement("td");
     tdPos.textContent = position;
 
-    // 手入力
+    // 手入力欄
     const tdInput = document.createElement("td");
     const input = document.createElement("input");
     input.type = "text";
-    input.placeholder = "空欄＝自動";
+    input.placeholder = "空欄＝自動決定";
     input.value = state.manualAssignments[position] ?? "";
 
-    input.oninput = () => {
+    input.addEventListener("input", () => {
       const v = input.value.trim();
       state.manualAssignments[position] = v === "" ? null : v;
-    };
-    tdInput.appendChild(input);
-
-    // プルダウン
-    const tdSelect = document.createElement("td");
-    const select = document.createElement("select");
-
-    const empty = document.createElement("option");
-    empty.value = "";
-    empty.textContent = "—";
-    select.appendChild(empty);
-
-    state.activeMembers.forEach(m => {
-      const opt = document.createElement("option");
-      opt.value = m.name;
-      opt.textContent = m.name;
-      select.appendChild(opt);
     });
 
-    select.onchange = () => {
-      if (select.value) {
-        input.value = select.value;
-        state.manualAssignments[position] = select.value;
-        select.value = "";
-      }
-    };
+    tdInput.appendChild(input);
 
-    tdSelect.appendChild(select);
+    // 既存メンバー quick ボタン
+    const tdButtons = document.createElement("td");
+    state.activeMembers.forEach(m => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = m.name;
+
+      btn.addEventListener("click", () => {
+        input.value = m.name;
+        state.manualAssignments[position] = m.name;
+      });
+
+      tdButtons.appendChild(btn);
+    });
 
     tr.appendChild(tdPos);
     tr.appendChild(tdInput);
-    tr.appendChild(tdSelect);
+    tr.appendChild(tdButtons);
     tbody.appendChild(tr);
   });
 }
@@ -209,6 +186,11 @@ function pickRandom(array) {
   return array[index];
 }
 
+function getEmptyPositions(manualAssignments) {
+  return Object.keys(manualAssignments)
+    .filter(position => manualAssignments[position] == null);
+}
+
 function getUnusedMembers(manualAssignments, members) {
   const usedNames = new Set(
     Object.values(manualAssignments).filter(Boolean)
@@ -277,17 +259,9 @@ function autoAssign(emptyPositions, availableMembers) {
 function runAssignment() {
   console.log("=== runAssignment ===");
   console.log("manualAssignments:", state.manualAssignments);
-  const emptyPositions = DEFENSE_POSITIONS.filter(
-    pos => state.manualAssignments[pos] == null
-  );
-  const defenseAssignments = {};
-    DEFENSE_POSITIONS.forEach(pos => {
-    defenseAssignments[pos] = state.manualAssignments[pos];
-  });
-
-  const availableMembers =
-    getUnusedMembers(defenseAssignments, state.activeMembers);
-  console.log("activeMembers:", state.activeMembers.map(m => m.name));
+  const emptyPositions = getEmptyPositions(state.manualAssignments);
+  const availableMembers = getUnusedMembers(state.manualAssignments, state.activeMembers);
+    console.log("activeMembers:", state.activeMembers.map(m => m.name));
 
   console.log(
     "[before assign]",
@@ -322,22 +296,11 @@ function runAssignment() {
     alert(check.message);
     return false;
   }
-
-  const assignedDefenseNames = new Set(
-    DEFENSE_POSITIONS
-      .map(pos => finalAssignments[pos])
-      .filter(Boolean)
-  );
-
-  const dhMembers = state.manualAssignments.DH
-    ? [state.manualAssignments.DH]
-    : state.activeMembers
-        .filter(m =>
-          !assignedDefenseNames.has(m.name) &&
-          m.positions.DH !== "ng"
-        )
-        .map(m => m.name);
   
+  const dhMembers = result.remainingMembers
+    .filter(m => m.positions.DH !== "ng")
+    .map(m => m.name);
+
   state.result = {
     assignments: finalAssignments,
     dh: dhMembers
