@@ -1,5 +1,5 @@
 const APP_TITLE = "草野球オーダー決定アプリ";
-const APP_VERSION = "v0.11.0";  //再実行ボタンの追加
+const APP_VERSION = "v1.0.0";  //チームメンバーへの初披露Ver.
 
 const state = {
   screen: "top", // 現在の画面
