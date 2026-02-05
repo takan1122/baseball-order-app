@@ -1,5 +1,5 @@
 const APP_TITLE = "草野球オーダー決定アプリ（試作）";
-const APP_VERSION = "v0.7.0";
+const APP_VERSION = "v0.7.1";
 
 const state = {
   screen: "top", // 現在の画面
@@ -270,7 +270,8 @@ function autoAssign(emptyPositions, availableMembers) {
 function runAssignment() {
   console.log("=== runAssignment ===");
   console.log("manualAssignments:", state.manualAssignments);
-  const emptyPositions = getEmptyPositions(state.manualAssignments);
+  const emptyPositions = getEmptyPositions(state.manualAssignments)
+    .filter(pos => pos !== "DH");
   const availableMembers = getUnusedMembers(state.manualAssignments, state.activeMembers);
     console.log("activeMembers:", state.activeMembers.map(m => m.name));
 
